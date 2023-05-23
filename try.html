@@ -12,7 +12,71 @@
 
 <body>
     <div id="example-table"></div>
+    <button id="add-row">Add row</button>
+    <button id="submitBtn">Post Data</button>
     <script type="text/javascript">
+    var table;
+
+    var table = new Tabulator("#example-table", {
+    columns: [
+    { title: "ID", field: "id", editor: "input" },
+    { title: "Title", field: "title", editor: "input" },
+    // Add more columns as needed
+    ],
+    });
+
+// Fetch data from API and set it in the table
+fetch('https://my-json-server.typicode.com/typicode/demo/posts')
+  .then(response => response.json())
+  .then(data => {
+    table.setData(data);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    // Handle errors
+  });
+
+// Handle form submit event or button click
+document.getElementById('submitBtn').addEventListener('click', postData);
+
+function postData(event) {
+  event.preventDefault();
+
+  // Retrieve user input from form fields
+  // Retrieve other form fields as needed
+
+  // Create new data object
+  var newData = table.getData();
+
+  // Add new data to the table
+  
+
+  // Send POST request to the API endpoint
+  fetch('https://my-json-server.typicode.com/typicode/demo/posts', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(newData)
+  })
+    .then(response => response.json())
+    .then(data => {
+        for (var i = 0; i < data.length; i++) {
+        data[i].id = parseInt(data[i].id);
+}
+      console.log('Posted data:', data);
+      // Handle the response as needed
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      // Handle errors
+    });
+}
+document.getElementById("add-row").addEventListener("click", function(){
+    table.addRow({}, false);
+});
+        
+/*
         var tabledata = [
     {id:1, name:"Oli Bob", progress:12, gender:"male", rating:1, col:"red", dob:"19/02/1984", car:1},
     {id:2, name:"Mary May", progress:1, gender:"female", rating:2, col:"blue", dob:"14/05/1982", car:true},
@@ -46,7 +110,7 @@ var table = new Tabulator("#example-table", {
         {title:"Date Of Birth", field:"dob", width:130, sorter:"date", hozAlign:"center"},
         {title:"Driver", field:"car", width:90,  hozAlign:"center", formatter:"tickCross", sorter:"boolean", editor:true},
     ],
-});
+});*/
     </script>
 </body>
 

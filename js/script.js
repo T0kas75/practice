@@ -1,4 +1,3 @@
-
 function w3_open() {
     document.getElementById("main").style.marginLeft = "10%";
     document.getElementById("main1").style.marginLeft = "10%";
@@ -85,7 +84,6 @@ function respoonseClose(){
 }
 
 
-
 var table = new Tabulator("#example-table", {
     data:tabledata,           //load row data from array
     layout:"fitColumns",      //fit columns to width of table
@@ -110,7 +108,7 @@ var table = new Tabulator("#example-table", {
             var value = cell.getValue();
             return "<span style='color:#ffffff;'>" + value + "</span>";
          }},
-        {title:"Name", field:"name", width:150, formatter:function(cell, formatterParams){
+        {title:"Name", field:"name", width:150, editor:"input", formatter:function(cell, formatterParams){
             var value = cell.getValue();
             return "<span style='color:#ffffff;'>" + value + "</span>";
          }},
@@ -122,12 +120,89 @@ var table = new Tabulator("#example-table", {
             var value = cell.getValue();
             return "<span style='color:#ffffff;'>" + value + "</span>";
          }},
-
     ],
 });
+
+
 document.getElementById("add-row").addEventListener("click", function(){
-    table.addRow({}, false);
+    /*var rowData = {
+        id: " ",
+        name: " ",
+        subject: " ",
+        grade: " "
+    };
+  */
+    var DT = table.getData();
+    var maxId = 0;
+    for (var i = 0; i < DT.length; i++) {
+        if (DT[i].id > maxId) {
+            maxId = DT[i].id;
+        }
+    }
+    // Pass the rowData object as the first argument
+    table.addRow({id: maxId + 1, name: " ", subject: " ", grade: " "},false);
 });
+/*
+var table = new Tabulator("#example-table", {
+    columns: [
+    { title: "ID", field: "id", editor: "input" },
+    { title: "Title", field: "title", editor: "input" },
+    // Add more columns as needed
+    ],
+    });
+    
+fetch('https://my-json-server.typicode.com/typicode/demo/posts')
+  .then(response => response.json())
+  .then(data => {
+    table.setData(data);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    // Handle errors
+  });
+*/
+// Handle form submit event or button click
+document.getElementById('submitBtn').addEventListener('click', postData);
+
+function postData(event) {
+  event.preventDefault();
+
+  // Retrieve user input from form fields
+  // Retrieve other form fields as needed
+
+  // Create new data object
+  var newData = table.getData();
+
+  // Add new data to the table
+  
+
+  // Send POST request to the API endpoint
+  fetch('https://my-json-server.typicode.com/typicode/demo/posts', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(newData)
+  })
+    .then(response => response.json())
+    .then(data => {
+        for (var i = 0; i < data.length; i++) {
+        data[i].id = parseInt(data[i].id);
+}
+      console.log('Posted data:', data);
+      // Handle the response as needed
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      // Handle errors
+    });
+}
+
+
+
+
+
+
 
 
 
